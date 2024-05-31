@@ -1,0 +1,6 @@
+﻿  main.c
+  viginera.c
+  Создание кода...
+C:\Users\Dodo\Desktop\РГЗ программирование\ConsoleC\main.c(146,5): warning C4090: return: разные квалификаторы "const"
+  LINK : не найден или не выполнена сборка C:\Users\Dodo\Desktop\РГЗ программирование\x64\Debug\ConsoleC.exe при последней инкрементной компоновке; выполняется полная компоновка
+  ConsoleC.vcxproj -> C:\Users\Dodo\Desktop\РГЗ программирование\x64\Debug\ConsoleC.exe
