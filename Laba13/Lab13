@@ -1,0 +1,177 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+void fill_array_keyboard(int* array, int n);
+void fill_array_random(int* array, int n);
+void fill_array_file(int* array, int n, const char* filename);
+void print_array(int* array, int n);
+void bubble_sort(int* array, int n, int* comparisons, int* swaps);
+void selection_sort(int* array, int n, int* comparisons, int* swaps);
+void insertion_sort(int* array, int n, int* comparisons, int* swaps);
+void copy_array(int* source, int* destination, int n);
+
+int main() {
+int n;
+int choice;
+int* array;
+int* temp_array;
+int comparisons, swaps;
+const char* filename = "data.txt";
+
+while (1) {
+printf("1. Enter array size (n)\n");
+printf("2. Fill array from keyboard\n");
+printf("3. Fill array with random numbers\n");
+printf("4. Fill array from file\n");
+printf("5. Sort array with Bubble Sort\n");
+printf("6. Sort array with Selection Sort\n");
+printf("7. Sort array with Insertion Sort\n");
+printf("8. Exit\n");
+printf("Enter your choice: ");
+scanf("%d", &choice);
+
+if (choice == 8) {
+break;
+}
+
+switch (choice) {
+case 1:
+printf("Enter array size: ");
+scanf("%d", &n);
+array = (int*)malloc(n * sizeof(int));
+temp_array = (int*)malloc(n * sizeof(int));
+break;
+case 2:
+fill_array_keyboard(array, n);
+break;
+case 3:
+fill_array_random(array, n);
+break;
+case 4:
+fill_array_file(array, n, filename);
+break;
+case 5:
+copy_array(array, temp_array, n);
+comparisons = swaps = 0;
+bubble_sort(temp_array, n, &comparisons, &swaps);
+printf("Bubble Sort:\n");
+print_array(temp_array, n);
+printf("Comparisons: %d, Swaps: %d\n", comparisons, swaps);
+break;
+case 6:
+copy_array(array, temp_array, n);
+comparisons = swaps = 0;
+selection_sort(temp_array, n, &comparisons, &swaps);
+printf("Selection Sort:\n");
+print_array(temp_array, n);
+printf("Comparisons: %d, Swaps: %d\n", comparisons, swaps);
+break;
+case 7:
+copy_array(array, temp_array, n);
+comparisons = swaps = 0;
+insertion_sort(temp_array, n, &comparisons, &swaps);
+printf("Insertion Sort:\n");
+print_array(temp_array, n);
+printf("Comparisons: %d, Swaps: %d\n", comparisons, swaps);
+break;
+default:
+printf("Invalid choice!\n");
+}
+}
+
+free(array);
+free(temp_array);
+return 0;
+}
+
+
+void fill_array_keyboard(int* array, int n) {
+printf("Enter %d elements:\n", n);
+for (int i = 0; i < n; i++) {
+scanf("%d", &array[i]);
+}
+}
+
+void fill_array_random(int* array, int n) {
+srand(time(NULL));
+for (int i = 0; i < n; i++) {
+array[i] = rand() % 1000;
+}
+}
+
+void fill_array_file(int* array, int n, const char* filename) {
+FILE* file = fopen(filename, "r");
+if (!file) {
+printf("Error: Could not open file %s\n", filename);
+return;
+}
+for (int i = 0; i < n; i++) {
+if (fscanf(file, "%d", &array[i]) != 1) {
+printf("Error: Could not read element %d\n", i);
+break;
+}
+}
+fclose(file);
+}
+
+void print_array(int* array, int n) {
+for (int i = 0; i < n; i++) {
+printf("%d ", array[i]);
+}
+printf("\n");
+}
+
+void bubble_sort(int* array, int n, int* comparisons, int* swaps) {
+for (int i = 0; i < n-1; i++) {
+for (int j = 0; j < n-i
+-1; j++) {
+(*comparisons)++;
+if (array[j] > array[j+1]) {
+int temp = array[j];
+array[j] = array[j+1];
+array[j+1] = temp;
+(*swaps)++;
+}
+}
+}
+}
+
+void selection_sort(int* array, int n, int* comparisons, int* swaps) {
+for (int i = 0; i < n-1; i++) {
+int min_idx = i;
+for (int j = i+1; j < n; j++) {
+(*comparisons)++;
+if (array[j] < array[min_idx]) {
+min_idx = j;
+}
+}
+if (min_idx != i) {
+int temp = array[i];
+array[i] = array[min_idx];
+array[min_idx] = temp;
+(*swaps)++;
+}
+}
+}
+
+void insertion_sort(int* array, int n, int* comparisons, int* swaps) {
+for (int i = 1; i < n; i++) {
+int key = array[i];
+int j = i - 1;
+while (j >= 0 && array[j] > key) {
+array[j + 1] = array[j];
+j = j - 1;
+(*comparisons)++;
+(*swaps)++;
+}
+array[j + 1] = key;
+if (j >= 0) (*comparisons)++;
+}
+}
+
+void copy_array(int* source, int* destination, int n) {
+for (int i = 0; i < n; i++) {
+destination[i] = source[i];
+}
+}
+
