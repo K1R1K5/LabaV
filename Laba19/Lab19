@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct Bus {
+int bus_number;
+char driver_name[50];
+int route_number;
+struct Bus* next;
+} Bus;
+
+Bus* create_bus(int bus_number, const char* driver_name, int route_number) {
+Bus* new_bus = (Bus*)malloc(sizeof(Bus));
+new_bus->bus_number = bus_number;
+strcpy(new_bus->driver_name, driver_name);
+new_bus->route_number = route_number;
+new_bus->next = NULL;
+return new_bus;
+}
+
+void add_bus(Bus** head, Bus* new_bus) {
+new_bus->next = *head;
+*head = new_bus;
+}
+
+Bus* remove_bus(Bus** head, int bus_number) {
+Bus* temp = *head;
+Bus* prev = NULL;
+
+while (temp != NULL && temp->bus_number != bus_number) {
+prev = temp;
+temp = temp->next;
+}
+
+if (temp == NULL) {
+return NULL;
+}
+
+if (prev == NULL) {
+*head = temp->next;
+} else {
+prev->next = temp->next;
+}
+
+temp->next = NULL; // Important to disconnect the node from the list
+return temp;
+}
+
+void print_buses(Bus* head) {
+Bus* temp = head;
+while (temp != NULL) {
+printf("Bus Number: %d, Driver: %s, Route Number: %d\n", temp->bus_number, temp->driver_name, temp->route_number);
+temp = temp->next;
+}
+}
+
+void free_buses(Bus* head) {
+Bus* temp;
+while (head != NULL) {
+temp = head;
+head = head->next;
+free(temp);
+}
+}
+
+int main() {
+Bus* park = NULL;
+Bus* on_route = NULL;
+
+// Initial formation of data about buses in the park
+add_bus(&park, create_bus(1, "Ivanov I.I.", 10));
+add_bus(&park, create_bus(2, "Petrov P.P.", 20));
+add_bus(&park, create_bus(3, "Sidorov S.S.", 30));
+
+int choice, bus_number;
+while (1) {
+printf("\n1. Display buses in the park\n");
+printf("2. Display buses on route\n");
+printf("3. Send bus to route\n");
+printf("4. Return bus to park\n");
+printf("5. Exit\n");
+printf("Enter your choice: ");
+scanf("%d", &choice);
+
+switch (choice) {
+case 1:
+printf("\nBuses in the park:\n");
+print_buses(park);
+break;
+case 2:
+printf("\nBuses on route:\n");
+print_buses(on_route);
+break;
+case 3:
+printf("\nEnter bus number to send to route: ");
+scanf("%d", &bus_number);
+Bus* bus = remove_bus(&park, bus_number);
+if (bus != NULL) {
+add_bus(&on_route, bus);
+printf("Bus %d sent to route.\n", bus_number);
+} else {
+printf("Bus not found in park.\n");
+}
+break;
+case 4:
+printf("\nEnter bus number to return to park: ");
+scanf("%d", &bus_number);
+bus = remove_bus(&on_route, bus_number);
+if (bus != NULL) {
+add_bus(&park, bus);
+printf("Bus %d returned to park.\n", bus_number);
+} else {
+printf("Bus not found on route.\n");
+}
+break;
+case 5:
+free_buses(park);
+free_buses(on_route);
+exit(0);
+default:
+printf("Invalid choice!\n");
+}
+}
+
+return 0;
