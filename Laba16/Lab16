@@ -1,0 +1,190 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+// Function to remove duplicates and sort the set
+void prepare_set(char* set) {
+int n = strlen(set);
+if (n == 0) return;
+
+// Sort the set
+for (int i = 0; i < n-1; i++) {
+for (int j = i+1; j < n; j++) {
+if (set[i] > set[j]) {
+char temp = set[i];
+set[i] = set[j];
+set[j] = temp;
+}
+}
+}
+
+// Remove duplicates
+int index = 1;
+for (int i = 1; i < n; i++) {
+if (set[i] != set[i-1]) {
+set[index++] = set[i];
+}
+}
+set[index] = '\0';
+}
+
+// Function to check if A is a subset of B
+int is_subset(const char* A, const char* B) {
+while (*A && *B) {
+if (*A == *B) {
+A++;
+}
+B++;
+}
+return *A == '\0';
+}
+
+// Function to perform union of A and B
+void union_sets(const char* A, const char* B, char* result) {
+while (*A && *B) {
+if (*A < *B) {
+*result++ = *A++;
+} else if (*A > *B) {
+*result++ = *B++;
+} else {
+*result++ = *A++;
+B++;
+}
+}
+while (*A) *result++ = *A++;
+while (*B) *result++ = *B++;
+*result = '\0';
+}
+
+// Function to perform intersection of A and B
+void intersection_sets(const char* A, const char* B, char* result) {
+while (*A && *B) {
+if (*A < *B) {
+A++;
+} else if (*A > *B) {
+B++;
+} else {
+*result++ = *A++;
+B++;
+}
+}
+*result = '\0';
+}
+
+// Function to perform difference A - B
+void difference_sets(const char* A, const char* B, char* result) {
+while (*A) {
+if (*B == '\0' || *A < *B) {
+*result++ = *A++;
+} else if (*A == *B) {
+A++;
+B++;
+} else {
+B++;
+}
+}
+*result = '\0';
+}
+
+// Function to read a set from input
+void read_set(char* set) {
+printf("Enter elements of the set (letters only, no spaces): ");
+scanf("%s", set);
+prepare_set(set);
+}
+
+// Function to print a set
+void print_set(const char* set) {
+printf("{ ");
+for (int i = 0; set[i] != '\0'; i++) {
+printf("%c ", set[i]);
+}
+printf("}");
+}
+
+// Main function
+int main() {
+char A[100], B[100], result[200];
+char choice;
+
+while (1) {
+printf("1. Enter sets A and B\n");
+printf("2. Perform operations\n");
+printf("3. Exit\n");
+printf("Enter your choice: ");
+scanf(" %c", &choice);
+
+if (choice == '1') {
+printf("Set A:\n");
+read_set(A);
+printf("Set B:\n");
+read_set(B);
+} else if (choice == '2') {
+if (strlen(A) == 0 || strlen(B) == 0) {
+printf("Please enter both sets first.\n");
+continue;
+}
+while (1) {
+printf("\nSet A: ");
+print_set(A);
+printf("\nSet B: ");
+print_set(B);
+printf("\n\nChoose operation:\n");
+printf("a. A ⊆ B\n");
+printf("b. A ∪ B\n");
+printf("c. A ∩ B\n");
+printf("d. A \\ B\n");
+printf("e. B \\ A\n");
+printf("f. Return to main menu\n");
+printf("Enter your choice: ");
+scanf(" %c", &choice);
+
+if (choice == 'f') {
+break;
+}
+
+switch (choice) {
+case 'a':
+if (is_subset(A, B)) {
+printf("\nA is a subset of B\n");
+} else {
+printf("\nA is not a subset of B\n");
+}
+break;
+case 'b':
+union_sets(A, B, result);
+printf("\
+nA ∪ B = ");
+print_set(result);
+printf("\n");
+break;
+case 'c':
+intersection_sets(A, B, result);
+printf("\nA ∩ B = ");
+print_set(result);
+printf("\n");
+break;
+case 'd':
+difference_sets(A, B, result);
+printf("\nA \\ B = ");
+print_set(result);
+printf("\n");
+break;
+case 'e':
+difference_sets(B, A, result);
+printf("\nB \\ A = ");
+print_set(result);
+printf("\n");
+break;
+default:
+printf("Invalid choice!\n");
+}
+}
+} else if (choice == '3') {
+break;
+} else {
+printf("Invalid choice! Please try again.\n");
+}
+}
+
+return 0;
+}
