@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <math.h>
+int main()
+{
+    int i,s;
+    int n = 5;
+    int A[] = {1,2,3,4,5};
+    for (s=0,i=0; i<n; i++)
+    if (A[i]<0)
+    s++;
+    if (s==0)
+    return 1;
+    return 0;
+}

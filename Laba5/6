@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <math.h>
+int main()
+{
+    int A[] = {1,2,3,4,5};
+    int i,s;
+    int n = 5;
+    for (i=0,s=0; i<n; i++)
+    if (A[i]>s)
+    s=A[i];
+}

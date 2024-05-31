@@ -1,0 +1,10 @@
+#include <stdio.h>
+#include <math.h>
+int main()
+{
+    int A[] = {1,2,3,4,5};
+    int i,s;
+    int n = 5;
+    for (s=0,i=0; i<n && A[i]>0; i++)
+    s=s+A[i];
+}
